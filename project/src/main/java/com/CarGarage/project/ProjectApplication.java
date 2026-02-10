@@ -1,13 +1,23 @@
 package com.CarGarage.project;
 
+import com.CarGarage.project.controllers.CarController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProjectApplication {
+public class ProjectApplication  implements CommandLineRunner {
+
+    @Autowired
+    private CarController controller;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectApplication.class, args);
 	}
 
+    @Override
+    public void run(String ...args) {
+        controller.run();
+    }
 }
