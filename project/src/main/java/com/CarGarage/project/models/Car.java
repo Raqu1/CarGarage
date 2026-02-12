@@ -7,6 +7,8 @@ public class Car {
     private int year;
     private String plate;
 
+    public Car() {}
+
     public Car(String id, String brand, String model, int year, String plate) {
         this.id = id;
         this.brand = brand;
