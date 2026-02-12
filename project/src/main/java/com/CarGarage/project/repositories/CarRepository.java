@@ -6,42 +6,17 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class CarRepository {
+public interface CarRepository {
 
-    private final List<Car> cars = new ArrayList<>();
-    private final Map<String, Car> carIndex = new HashMap<>();
-    private int nextId = 1;
+    String generateId();
 
-    public String generateId() {
-        return String.valueOf(nextId++);
-    }
+    public List<Car> findAll();
 
-    public List<Car> findAll() {
-        return new ArrayList<>(cars);
-    }
+    public Optional<Car> findById(String id);
 
-    public Optional<Car> findById(String id) {
-        return Optional.ofNullable(carIndex.get(id));
-    }
+    public Car save(Car car);
 
-    public Car save(Car car) {
-        deleteById(car.getId());
+    public void deleteById(String id);
 
-        cars.add(car);
-        carIndex.put(car.getId(), car);
-        return car;
-    }
-
-    public void deleteById(String id) {
-        Car existing = carIndex.remove(id);
-
-        if (existing != null) {
-            cars.remove(existing);
-        }
-    }
-
-    public boolean existsByPlate(String plate) {
-        return cars.stream()
-                .anyMatch(car -> car.getPlate().equals(plate));
-    }
+    public boolean existsByPlate(String plate);
 }
