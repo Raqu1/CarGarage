@@ -1,5 +1,6 @@
 package com.CarGarage.project.services;
 
+import com.CarGarage.project.factory.FactoryRepository;
 import com.CarGarage.project.repositories.CarRepository;
 import com.CarGarage.project.models.Car;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,13 @@ import java.util.List;
 
 @Service
 public class CarService {
-    @Autowired
-    private CarRepository carRepository;
 
+    private final CarRepository carRepository;
+
+    @Autowired
+    public CarService(FactoryRepository factory) {
+        this.carRepository = factory.create(CarRepository.class);
+    }
 
     public List<Car> listCars() {
         return carRepository.findAll();
