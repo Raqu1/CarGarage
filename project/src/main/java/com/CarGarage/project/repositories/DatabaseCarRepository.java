@@ -1,12 +1,19 @@
 package com.CarGarage.project.repositories;
 
+import com.CarGarage.project.dao.CarJdbcDao;
 import com.CarGarage.project.models.Car;
 
+import java.sql.*;
 import java.util.*;
 
 public class DatabaseCarRepository implements CarRepository{
-    private final Map<String, Car> table = new HashMap<>();
-    private int nextId = 1;
+    private final CarJdbcDao dao;
+    private int nextId;
+
+    public DatabaseCarRepository() {
+        this.dao = new CarJdbcDao("jdbc:h2:file:./data/garage", "sa", "");
+        this.nextId = dao.getMaxId() + 1;
+    }
 
     @Override
     public String generateId() {
@@ -15,34 +22,26 @@ public class DatabaseCarRepository implements CarRepository{
 
     @Override
     public List<Car> findAll() {
-        System.out.println("[DatabaseRepository]: SELECT * FROM cars");
-        return new ArrayList<>(table.values());
+        return dao.findAll();
     }
 
     @Override
     public Optional<Car> findById(String id) {
-        System.out.println("[DatabaseRepository]: SELECT * FROM cars WHERE id = " +  id);
-        return Optional.ofNullable(table.get(id));
+        return dao.findById(id);
     }
 
     @Override
     public Car save(Car car) {
-        System.out.println("[DatabaseRepository]: INSERT/UPDATE * FROM cars WHERE id = " + car.getId());
-        deleteById(car.getId());
-
-        table.put(car.getId(), car);
-        return car;
+        return dao.save(car);
     }
 
     @Override
     public void deleteById(String id) {
-        System.out.println("[DatabaseRepository]: DELETE * FROM cars WHERE id = " + id);
-        table.remove(id);
+        dao.deleteById(id);
     }
 
     @Override
     public boolean existsByPlate(String plate) {
-        return table.values().stream()
-                .anyMatch(car -> car.getPlate().equals(plate));
+        return dao.existsByPlate(plate);
     }
 }
